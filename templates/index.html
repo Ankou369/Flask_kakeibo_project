@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<header>
+    <h1>家計簿アプリ</h1>
+    <p>支出管理ページ</p>
+</header>
+<main>
+    <a href="/regist" role="button">新規登録</a>
+    <section>
+        <h2>今月の支出</h2>
+            {%if memo_list == [] %}
+                <p>今月の支出は登録されていません</p>
+            {% else %}
+                <table border="1">
+                    <tr>
+                        <th>商品</th>
+                        <th>価格</th>
+                        <th>編集</th>
+                        <th>削除</th>
+                    </tr>
+                    {% for memo in memo_list %}
+                        <tr>
+                            <td>{{memo.title}}</td>
+                            <td>{{memo.body}}</td>
+                            <td>
+                                <a href="/{{memo.id}}/edit" role="button">編集</a>
+                            </td>
+                            <td>
+                                <a href="/{{memo.id}}/delete" role="button">削除</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+    </section>
+
+    
+
+</main>
+<footer>
+    <small>
+        2026<br>
+        本ページは個人の学習目的で作成しています。
+    </small>
+</footer>
+
+
+{% endblock %}
