@@ -9,10 +9,40 @@
         <h2>残金</h2>
         <p id='remaining_amount'>{{remaining_amount}}円</p>
     </section>
+
+    <section>
+        <h2>収入</h2>
+            {% if income_list == [] %}
+                <p>収入は登録されていません</p>
+            {% else %}
+                <table border="1">
+                    <tr>
+                        <th>日付</th>
+                        <th>金額</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    {% for income in income_list %}
+                        <tr>
+                            <td>{{income.date}}</td>
+                            <td>{{income.amount}}</td>
+                            <td>
+                                <a href="/income/{{income.id}}/edit" role="button">編集</a>
+                            </td>
+                            <td>
+                                <a href="/income/{{income.id}}/delete" role="button">削除</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+            <a href="/income/regist" role="button" class="add_btn">＋追加</a>
+    </section>
+
     <section>
         <h2>支出</h2>
-            {% if memo_list == [] %}
-                <p>今月の支出は登録されていません</p>
+            {% if expense_list == [] %}
+                <p>支出は登録されていません</p>
             {% else %}
                 <table border="1">
                     <tr>
@@ -28,16 +58,16 @@
                             <td>{{expense.goods}}</td>
                             <td>{{expense.amount}}</td>
                             <td>
-                                <a href="/{{expense.id}}/edit" role="button">編集</a>
+                                <a href="/expense/{{expense.id}}/edit" role="button">編集</a>
                             </td>
                             <td>
-                                <a href="/{{expense.id}}/delete" role="button">削除</a>
+                                <a href="/expense/{{expense.id}}/delete" role="button">削除</a>
                             </td>
                         </tr>
                     {% endfor %}
                 </table>
             {% endif %}
-            <a href="/regist" role="button" class="add_btn">＋追加</a>
+            <a href="/expense/regist" role="button" class="add_btn">＋追加</a>
     </section>
 
     

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>登録</h1>
+<h1>編集</h1>
 <form method="POST">
     <table border="1">
         <tr>
@@ -10,17 +10,17 @@
         </tr>
         <tr>
             <td>
-                <input type="date" name="date">
-            </td> 
+                <input type="date" name="date" value="{{post.date}}">
+            </td>
             <td>
-                <input type="text" name="goods">
+                <input type="text" name="goods" value="{{post.goods}}">
             </td>   
             <td>
-                <input type="number" name="amount">
+                <input type="number" name="amount" value="{{post.amount}}">
             </td>                 
         </tr>
     </table>
-    <input type="submit" value="項目の追加">
+    <input type="submit" value="編集">
 </form>
 <a href="/" role="button">一覧に戻る</a>
 {% endblock %}

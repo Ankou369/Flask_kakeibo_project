@@ -22,8 +22,9 @@ def top():
                                         income_list=income_list,
                                         remaining_amount=remaining_amount)
 
-@app.route("/regist",methods=['GET','POST'])
-def regist():
+
+@app.route("/expense/regist",methods=['GET','POST'])
+def expense_regist():
     if request.method =='POST':
         #画面からの登録情報の取得
         date = request.form.get('date')
@@ -36,7 +37,20 @@ def regist():
     
     return render_template('expense/regist.html')
 
-@app.route("/<id>/edit",methods=['GET','POST'])
+@app.route("/income/regist",methods=['GET','POST'])
+def income_regist():
+    if request.method =='POST':
+        #画面からの登録情報の取得
+        date = request.form.get('date')
+        amount = request.form.get('amount')
+        db = get_db()
+        db.execute("insert into income (date,amount) values(?,?)",[date,amount])
+        db.commit()
+        return redirect('/')
+    
+    return render_template('income/regist.html')
+
+@app.route("/expense/<id>/edit",methods=['GET','POST'])
 def edit(id):
     if request.method =='POST':
         #画面からの登録情報の取得
@@ -53,7 +67,7 @@ def edit(id):
     ).fetchone()
     return render_template('expense/edit.html',post=post)
 
-@app.route("/<id>/delete",methods=['GET','POST'])
+@app.route("/expense/<id>/delete",methods=['GET','POST'])
 def delete(id):
     if request.method =='POST':
         #画面からの登録情報の取得
