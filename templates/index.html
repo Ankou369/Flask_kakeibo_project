@@ -6,8 +6,12 @@
 </header>
 <main>
     <section>
+        <h2>残金</h2>
+        <p>{{remaining_amount}}</p>
+    </section>
+    <section>
         <h2>今月の支出</h2>
-            {%if memo_list == [] %}
+            {% if memo_list == [] %}
                 <p>今月の支出は登録されていません</p>
             {% else %}
                 <table border="1">
@@ -18,16 +22,16 @@
                         <th></th>
                         <th></th>
                     </tr>
-                    {% for memo in memo_list %}
+                    {% for expense in expense_list %}
                         <tr>
-                            <td>{{memo.date}}</td>
-                            <td>{{memo.goods}}</td>
-                            <td>{{memo.amount}}</td>
+                            <td>{{expense.date}}</td>
+                            <td>{{expense.goods}}</td>
+                            <td>{{expense.amount}}</td>
                             <td>
-                                <a href="/{{memo.id}}/edit" role="button">編集</a>
+                                <a href="/{{expense.id}}/edit" role="button">編集</a>
                             </td>
                             <td>
-                                <a href="/{{memo.id}}/delete" role="button">削除</a>
+                                <a href="/{{expense.id}}/delete" role="button">削除</a>
                             </td>
                         </tr>
                     {% endfor %}

@@ -7,8 +7,20 @@ app = Flask(__name__)
 
 @app.route("/")
 def top():
-    memo_list = get_db().execute("select id,date,goods,amount from memo").fetchall()
-    return render_template('index.html',memo_list=memo_list)
+    expense_list = get_db().execute("select id,date,goods,amount from expense").fetchall()
+    income_list = get_db().execute("select id,date,amount from income").fetchall()
+
+    total_expense = 0
+    total_income = 0
+    for expense_data in expense_list:
+        total_expense += int(expense_data['amount'])
+    for income_data in income_list:
+        total_income += int(income_data['amount'])
+    remaining_amount = total_income - total_expense
+
+    return render_template('index.html',expense_list=expense_list,
+                                        income_list=income_list,
+                                        remaining_amount=remaining_amount)
 
 @app.route("/regist",methods=['GET','POST'])
 def regist():
@@ -18,11 +30,11 @@ def regist():
         goods = request.form.get('goods')
         amount = request.form.get('amount')
         db = get_db()
-        db.execute("insert into memo (date,goods,amount) values(?,?,?)",[date,goods,amount])
+        db.execute("insert into expense (date,goods,amount) values(?,?,?)",[date,goods,amount])
         db.commit()
         return redirect('/')
     
-    return render_template('regist.html')
+    return render_template('expense/regist.html')
 
 @app.route("/<id>/edit",methods=['GET','POST'])
 def edit(id):
@@ -32,28 +44,28 @@ def edit(id):
         goods = request.form.get('goods')
         amount = request.form.get('amount')
         db = get_db()
-        db.execute("update memo set date=?,goods=?,amount=? where id=?",[date,goods,amount,id])
+        db.execute("update expense set date=?,goods=?,amount=? where id=?",[date,goods,amount,id])
         db.commit()
         return redirect('/')
     
     post = get_db().execute(
-        "select id,date,goods,amount from memo where id=?",(id,)
+        "select id,date,goods,amount from expense where id=?",(id,)
     ).fetchone()
-    return render_template('edit.html',post=post)
+    return render_template('expense/edit.html',post=post)
 
 @app.route("/<id>/delete",methods=['GET','POST'])
 def delete(id):
     if request.method =='POST':
         #画面からの登録情報の取得
         db = get_db()
-        db.execute("delete from memo where id=?",(id,))
+        db.execute("delete from expense where id=?",(id,))
         db.commit()
         return redirect('/')
     
     post = get_db().execute(
-        "select id,date,goods,amount from memo where id=?",(id,)
+        "select id,date,goods,amount from expense where id=?",(id,)
     ).fetchone()
-    return render_template('delete.html',post=post)
+    return render_template('expense/delete.html',post=post)
 
 
 if __name__ == "__main__":
