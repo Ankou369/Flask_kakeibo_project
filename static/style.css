@@ -69,3 +69,11 @@ th:nth-child(4),
 td:nth-child(4) {
     width: 10%; /* 削除 */
 }
+
+#remaining_amount{
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    font-weight: bold;
+    font-size: 40px;
+}

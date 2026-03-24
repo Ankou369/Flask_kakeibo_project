@@ -7,10 +7,10 @@
 <main>
     <section>
         <h2>残金</h2>
-        <p>{{remaining_amount}}</p>
+        <p id='remaining_amount'>{{remaining_amount}}円</p>
     </section>
     <section>
-        <h2>今月の支出</h2>
+        <h2>支出</h2>
             {% if memo_list == [] %}
                 <p>今月の支出は登録されていません</p>
             {% else %}
