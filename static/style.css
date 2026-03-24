@@ -1,5 +1,5 @@
 body{
-    font-family:serif;
+    font-family:sans-serif;
     background-color:#f5f7fa;
     margin:0;
     padding:0;
@@ -32,4 +32,8 @@ footer{
     text-align:center;
     padding: 10px;
     color:#666;
+}
+
+.add_btn{
+    margin-left: 240px; /* 追加の左の余白 */
 }

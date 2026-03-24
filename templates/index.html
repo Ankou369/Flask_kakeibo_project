@@ -5,7 +5,6 @@
     <p>支出管理ページ</p>
 </header>
 <main>
-    <a href="/regist" role="button">新規登録</a>
     <section>
         <h2>今月の支出</h2>
             {%if memo_list == [] %}
@@ -15,8 +14,8 @@
                     <tr>
                         <th>商品</th>
                         <th>価格</th>
-                        <th>編集</th>
-                        <th>削除</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     {% for memo in memo_list %}
                         <tr>
@@ -32,6 +31,7 @@
                     {% endfor %}
                 </table>
             {% endif %}
+            <a href="/regist" role="button" class="add_btn">＋追加</a>
     </section>
 
     
