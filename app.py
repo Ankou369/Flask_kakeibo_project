@@ -51,7 +51,7 @@ def income_regist():
     return render_template('income/regist.html')
 
 @app.route("/expense/<id>/edit",methods=['GET','POST'])
-def edit(id):
+def expense_edit(id):
     if request.method =='POST':
         #画面からの登録情報の取得
         date = request.form.get('date')
@@ -66,6 +66,22 @@ def edit(id):
         "select id,date,goods,amount from expense where id=?",(id,)
     ).fetchone()
     return render_template('expense/edit.html',post=post)
+
+@app.route("/income/<id>/edit",methods=['GET','POST'])
+def income_edit(id):
+    if request.method =='POST':
+        #画面からの登録情報の取得
+        date = request.form.get('date')
+        amount = request.form.get('amount')
+        db = get_db()
+        db.execute("update income set date=?,amount=? where id=?",[date,amount,id])
+        db.commit()
+        return redirect('/')
+    
+    post = get_db().execute(
+        "select id,date,amount from income where id=?",(id,)
+    ).fetchone()
+    return render_template('income/edit.html',post=post)
 
 @app.route("/expense/<id>/delete",methods=['GET','POST'])
 def delete(id):
