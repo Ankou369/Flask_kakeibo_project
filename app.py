@@ -84,7 +84,7 @@ def income_edit(id):
     return render_template('income/edit.html',post=post)
 
 @app.route("/expense/<id>/delete",methods=['GET','POST'])
-def delete(id):
+def expense_delete(id):
     if request.method =='POST':
         #画面からの登録情報の取得
         db = get_db()
@@ -96,6 +96,20 @@ def delete(id):
         "select id,date,goods,amount from expense where id=?",(id,)
     ).fetchone()
     return render_template('expense/delete.html',post=post)
+
+@app.route("/income/<id>/delete",methods=['GET','POST'])
+def income_delete(id):
+    if request.method =='POST':
+        #画面からの登録情報の取得
+        db = get_db()
+        db.execute("delete from income where id=?",(id,))
+        db.commit()
+        return redirect('/')
+    
+    post = get_db().execute(
+        "select id,date,amount from income where id=?",(id,)
+    ).fetchone()
+    return render_template('income/delete.html',post=post)
 
 
 if __name__ == "__main__":
