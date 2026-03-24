@@ -12,6 +12,7 @@
             {% else %}
                 <table border="1">
                     <tr>
+                        <th>日付</th>
                         <th>商品</th>
                         <th>価格</th>
                         <th></th>
@@ -19,6 +20,7 @@
                     </tr>
                     {% for memo in memo_list %}
                         <tr>
+                            <td>{{memo.date}}</td>
                             <td>{{memo.title}}</td>
                             <td>{{memo.body}}</td>
                             <td>

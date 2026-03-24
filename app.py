@@ -7,17 +7,18 @@ app = Flask(__name__)
 
 @app.route("/")
 def top():
-    memo_list = get_db().execute("select id,title,body from memo").fetchall()
+    memo_list = get_db().execute("select id,date,title,body from memo").fetchall()
     return render_template('index.html',memo_list=memo_list)
 
 @app.route("/regist",methods=['GET','POST'])
 def regist():
     if request.method =='POST':
         #画面からの登録情報の取得
+        date = request.form.get('date')
         title = request.form.get('title')
         body = request.form.get('body')
         db = get_db()
-        db.execute("insert into memo (title,body) values(?,?)",[title,body])
+        db.execute("insert into memo (date,title,body) values(?,?,?)",[date,title,body])
         db.commit()
         return redirect('/')
     
@@ -27,15 +28,16 @@ def regist():
 def edit(id):
     if request.method =='POST':
         #画面からの登録情報の取得
+        date = request.form.get('date')
         title = request.form.get('title')
         body = request.form.get('body')
         db = get_db()
-        db.execute("update memo set title=?,body=? where id=?",[title,body,id])
+        db.execute("update memo set date=?,title=?,body=? where id=?",[date,title,body,id])
         db.commit()
         return redirect('/')
     
     post = get_db().execute(
-        "select id,title,body from memo where id=?",(id,)
+        "select id,date,title,body from memo where id=?",(id,)
     ).fetchone()
     return render_template('edit.html',post=post)
 
@@ -49,7 +51,7 @@ def delete(id):
         return redirect('/')
     
     post = get_db().execute(
-        "select id,title,body from memo where id=?",(id,)
+        "select id,date,title,body from memo where id=?",(id,)
     ).fetchone()
     return render_template('delete.html',post=post)
 

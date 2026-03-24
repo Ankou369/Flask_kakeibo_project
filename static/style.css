@@ -35,5 +35,37 @@ footer{
 }
 
 .add_btn{
-    margin-left: 240px; /* 追加の左の余白 */
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+    text-align: center;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+    width: 20%; /* 日付 */
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    width: 40%; /* 商品 */
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+    width: 20%; /* 価格 */
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    width: 10%; /* 編集 */
+}
+th:nth-child(4),
+td:nth-child(4) {
+    width: 10%; /* 削除 */
 }
