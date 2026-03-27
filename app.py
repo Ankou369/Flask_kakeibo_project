@@ -1,14 +1,18 @@
 from flask import Flask
 from flask import render_template,g,redirect,request
 import sqlite3
+#日付
+import calendar 
+from datetime import datetime
+
 DATABASE="flaskmemo.db"
 
 app = Flask(__name__)
 
 @app.route("/")
 def top():
-    expense_list = get_db().execute("select id,date,goods,amount from expense").fetchall()
-    income_list = get_db().execute("select id,date,amount from income").fetchall()
+    expense_list = get_db().execute("select id,date,goods,amount from expense ORDER BY date").fetchall()
+    income_list = get_db().execute("select id,date,amount from income ORDER BY date").fetchall()
 
     total_expense = 0
     total_income = 0
@@ -18,9 +22,58 @@ def top():
         total_income += int(income_data['amount'])
     remaining_amount = total_income - total_expense
 
+    values = []
+
+    now = datetime.now()
+    year=now.year
+    month=now.month
+
+    month_last_day = calendar.monthrange(year,month)[1]
+
+    labels = []
+    values = []
+
+    income_rows = get_db().execute("""
+        SELECT
+            strftime('%d', date) AS day,
+            SUM(amount),
+            SUM(SUM(amount)) OVER (ORDER BY strftime('%d', date))
+        FROM income
+        WHERE strftime('%Y-%m', date) = strftime('%Y-%m', 'now')
+        GROUP BY day
+        ORDER BY day
+        """).fetchall()
+    
+    expense_rows = get_db().execute("""
+        SELECT
+            strftime('%d', date) AS day,
+            SUM(amount),
+            SUM(SUM(amount)) OVER (ORDER BY strftime('%d', date))
+        FROM expense
+        WHERE strftime('%Y-%m', date) = strftime('%Y-%m', 'now')
+        GROUP BY day
+        ORDER BY day
+        """).fetchall()
+    
+    income_dict = {int(row[0]): row[1] for row in income_rows}
+    expense_dict = {int(row[0]): row[1] for row in expense_rows}
+
+    income = 0
+    expense = 0
+    for day in range(1, month_last_day+1):
+        labels.append(f"{day}日")
+        income += income_dict.get(day, 0)
+        expense += expense_dict.get(day,0)
+        values.append(income - expense)
+
     return render_template('index.html',expense_list=expense_list,
                                         income_list=income_list,
-                                        remaining_amount=remaining_amount)
+                                        remaining_amount=remaining_amount,
+                                        labels=labels,
+                                        values=values,
+                                        month=month)
+
+
 
 
 @app.route("/expense/regist",methods=['GET','POST'])
@@ -110,7 +163,6 @@ def income_delete(id):
         "select id,date,amount from income where id=?",(id,)
     ).fetchone()
     return render_template('income/delete.html',post=post)
-
 
 if __name__ == "__main__":
     app.run()

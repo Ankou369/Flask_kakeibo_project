@@ -44,7 +44,9 @@ table {
     width: 100%;
     table-layout: fixed;
     text-align: center;
+    
 }
+
 
 th:nth-child(1),
 td:nth-child(1) {

@@ -70,6 +70,27 @@
             <a href="/expense/regist" role="button" class="add_btn">＋追加</a>
     </section>
 
+    <section>
+        <h2>{{month}}月のデータ</h2>
+        <canvas id="myChart"></canvas>
+    </section>
+
+    <script>
+        const labels = {{ labels | tojson}};
+        const values = {{ values | tojson}}
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'line',  // 棒グラフ
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'テストデータ',
+                    data: values,
+                }]
+            }
+        });
+    </script>
     
 
 </main>
