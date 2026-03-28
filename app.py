@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template,g,redirect,request
+from flask import render_template,g,redirect,request,jsonify
 from templates.utils.controller import get_db,connect_db,top_draw_graph
 import sqlite3
 #日付
@@ -12,13 +12,22 @@ app = Flask(__name__)
 
 @app.route("/")
 def top():
-    expense_list = get_db().execute("select id,date,goods,amount from expense ORDER BY date").fetchall()
-    income_list = get_db().execute("select id,date,amount from income ORDER BY date").fetchall()
-
     #現在の年月
     now = datetime.now()
     year=now.year
-    month=now.month
+    # month=now.month
+    month = request.args.get("month", default=now.month, type=int)
+
+    # 月の補正
+    if month < 1:
+        month = 12
+        year -= 1
+    elif month > 12:
+        month = 1
+        year += 1
+
+    expense_list = get_db().execute("select id,date,goods,amount from expense ORDER BY date").fetchall()
+    income_list = get_db().execute("select id,date,amount from income ORDER BY date").fetchall()
 
     total_expense = 0
     total_income = 0
@@ -36,6 +45,26 @@ def top():
                                         labels=labels,
                                         values=values,
                                         month=month)
+
+@app.route("/change_month")
+def change_month():
+    month = request.args.get("month", type=int)
+    year = datetime.now().year
+
+    if month < 1:
+        month = 12
+        year -= 1
+    elif month > 12:
+        month = 1
+        year += 1
+
+    labels, values, month = top_draw_graph(datetime.now(), year, month)
+
+    return jsonify({
+        "labels": labels,
+        "values": values,
+        "month": month
+    })
 
 @app.route("/expense/regist",methods=['GET','POST'])
 def expense_regist():

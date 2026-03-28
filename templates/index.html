@@ -71,7 +71,64 @@
     </section>
 
     <section>
+        <h2 id="month-title">{{ month }}月のデータ</h2>
+        <button type="button" onclick="changeMonth(-1)">←</button>
+        <button type="button" onclick="changeMonth(1)">→</button>
+        <canvas id="myChart"></canvas>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+    let month = {{ month }};
+
+    const ctx = document.getElementById('myChart');
+
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ labels | tojson }},
+            datasets: [{
+                label: '支出',
+                data: {{ values | tojson }},
+            }]
+        }
+    });
+    </script>
+
+    <script>
+    function changeMonth(diff) {
+        month += diff;
+
+        fetch(`/change_month?month=${month}`)
+            .then(res => res.json())
+            .then(data => {
+                // 月更新
+                month = data.month;
+                document.getElementById("month-title").innerText = month + "月のデータ";
+
+                // グラフ更新
+                chart.data.labels = data.labels;
+                chart.data.datasets[0].data = data.values;
+                chart.update();
+            });
+    }
+    </script>
+
+    <!-- <section>
         <h2>{{month}}月のデータ</h2>
+        <button onclick="changeMonth(-1)">←</button>
+        <button onclick="changeMonth(1)">→</button>
+
+        <script>
+        let month = {{ month }};
+
+        function changeMonth(diff) {
+            month += diff;
+            location.href = `/?month=${month}`;
+        }
+        </script>
+        
         <canvas id="myChart"></canvas>
     </section>
 
@@ -90,7 +147,7 @@
                 }]
             }
         });
-    </script>
+    </script> -->
     
 
 </main>
